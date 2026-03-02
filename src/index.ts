@@ -26,8 +26,9 @@ import './tools/browser.js';
 // ─── Core Exports ───────────────────────────────────────────────────────────
 
 export { buildDevKit, registerToolFactory, getRegistry } from './registry.js';
-export type { ToolContext, ToolResult, MAX_OUTPUT_BYTES } from './types.js';
-export { truncateOutput, isWithinDir, isCommandAllowed, guardPath } from './utils.js';
+export type { ToolContext, ToolResult } from './types.js';
+export { MAX_OUTPUT_BYTES } from './types.js';
+export { truncateOutput, isWithinDir, isCommandAllowed } from './utils.js';
 
 // ─── Adapters ───────────────────────────────────────────────────────────────
 

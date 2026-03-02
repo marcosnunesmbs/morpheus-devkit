@@ -1,11 +1,11 @@
-# @anthropic/devkit
+# morpheus-devkit
 
 Shared DevKit tools for Morpheus and Smith - provides a comprehensive set of tools for AI agents.
 
 ## Installation
 
 ```bash
-npm install @anthropic/devkit
+npm install morpheus-devkit
 ```
 
 ## Usage
@@ -13,8 +13,8 @@ npm install @anthropic/devkit
 ### Basic Usage
 
 ```typescript
-import { buildDevKit } from '@anthropic/devkit';
-import type { ToolContext } from '@anthropic/devkit';
+import { buildDevKit } from 'morpheus-devkit';
+import type { ToolContext } from 'morpheus-devkit';
 
 const context: ToolContext = {
   working_dir: '/path/to/workspace',
