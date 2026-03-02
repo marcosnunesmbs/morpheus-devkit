@@ -1,0 +1,72 @@
+{
+  "name": "@anthropic/devkit",
+  "version": "1.0.0",
+  "description": "Shared DevKit tools for Morpheus and Smith - provides file system, shell, git, network, and browser automation tools",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./tools": {
+      "types": "./dist/tools/index.d.ts",
+      "import": "./dist/tools/index.js"
+    },
+    "./tools/*": {
+      "types": "./dist/tools/*.d.ts",
+      "import": "./dist/tools/*.js"
+    },
+    "./adapters/*": {
+      "types": "./dist/adapters/*.d.ts",
+      "import": "./dist/adapters/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run clean && npm run build",
+    "test": "vitest",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "morpheus",
+    "smith",
+    "devkit",
+    "tools",
+    "langchain",
+    "automation"
+  ],
+  "author": "Morpheus Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.3.40",
+    "@mozilla/readability": "^0.5.0",
+    "@puppeteer/browsers": "^2.9.0",
+    "fs-extra": "^11.3.0",
+    "jsdom": "^26.0.0",
+    "puppeteer-core": "^24.4.0",
+    "simple-git": "^3.28.0",
+    "tree-kill": "^1.2.2",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.13.9",
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.7"
+  },
+  "peerDependencies": {
+    "@langchain/core": ">=0.3.0"
+  }
+}
