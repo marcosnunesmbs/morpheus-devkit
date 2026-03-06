@@ -9,6 +9,8 @@ export interface ToolContext {
   timeout_ms?: number;
   /** Sandbox root directory. When set, ALL file/shell/git paths are confined here. */
   sandbox_dir?: string;
+  /** Additional allowed paths outside sandbox. Empty array = no additional paths. */
+  allowed_paths?: string[];
   /** When true, blocks all write/delete/create operations. */
   readonly_mode?: boolean;
   /** Enable filesystem tools. Default: true. */

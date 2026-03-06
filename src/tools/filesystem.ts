@@ -5,7 +5,7 @@ import path from 'path';
 import { glob } from 'glob';
 import type { StructuredTool } from '@langchain/core/tools';
 import type { ToolContext } from '../types.js';
-import { truncateOutput, isWithinDir } from '../utils.js';
+import { truncateOutput, isPathAllowed } from '../utils.js';
 import { registerToolFactory } from '../registry.js';
 
 function resolveSafe(ctx: ToolContext, filePath: string): string {
@@ -16,8 +16,8 @@ function resolveSafe(ctx: ToolContext, filePath: string): string {
 }
 
 /**
- * Guards a resolved path against the sandbox directory.
- * When sandbox_dir is set, ALL paths (read and write) must be within it.
+ * Guards a resolved path against the sandbox directory and allowed_paths.
+ * When sandbox_dir is set, ALL paths (read and write) must be within it or allowed_paths.
  * When readonly_mode is true, destructive operations are blocked.
  */
 function guardPath(ctx: ToolContext, resolved: string, destructive = false): void {
@@ -25,9 +25,11 @@ function guardPath(ctx: ToolContext, resolved: string, destructive = false): voi
   if (destructive && ctx.readonly_mode) {
     throw new Error(`Operation denied: DevKit is in read-only mode. Write/delete operations are blocked.`);
   }
-  // Enforce sandbox_dir for ALL operations (read and write)
-  if (ctx.sandbox_dir && !isWithinDir(resolved, ctx.sandbox_dir)) {
-    throw new Error(`Path '${resolved}' is outside the sandbox directory '${ctx.sandbox_dir}'. Operation denied.`);
+  // Enforce sandbox_dir and allowed_paths for ALL operations (read and write)
+  const allowedPaths = ctx.allowed_paths ?? [];
+  if (!isPathAllowed(resolved, allowedPaths, ctx.sandbox_dir)) {
+    const sandboxMsg = ctx.sandbox_dir ? ` or sandbox '${ctx.sandbox_dir}'` : '';
+    throw new Error(`Path '${resolved}' is outside allowed paths${sandboxMsg}. Operation denied.`);
   }
 }
 

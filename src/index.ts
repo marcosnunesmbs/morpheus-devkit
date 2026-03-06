@@ -28,7 +28,7 @@ import './tools/browser.js';
 export { buildDevKit, registerToolFactory, getRegistry } from './registry.js';
 export type { ToolContext, ToolResult } from './types.js';
 export { MAX_OUTPUT_BYTES } from './types.js';
-export { truncateOutput, isWithinDir, isCommandAllowed } from './utils.js';
+export { truncateOutput, isWithinDir, isPathAllowed, isCommandAllowed } from './utils.js';
 
 // ─── Adapters ───────────────────────────────────────────────────────────────
 

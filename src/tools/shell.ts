@@ -7,7 +7,7 @@ import { randomUUID } from 'crypto';
 import type { StructuredTool } from '@langchain/core/tools';
 import type { ToolContext } from '../types.js';
 import { ShellAdapter } from '../adapters/shell.js';
-import { truncateOutput, isCommandAllowed, isWithinDir } from '../utils.js';
+import { truncateOutput, isCommandAllowed, isPathAllowed } from '../utils.js';
 import { registerToolFactory } from '../registry.js';
 
 export function createShellTools(ctx: ToolContext): StructuredTool[] {
@@ -23,14 +23,16 @@ export function createShellTools(ctx: ToolContext): StructuredTool[] {
           });
         }
 
-        // Enforce sandbox_dir: override cwd to stay within sandbox
+        // Enforce sandbox_dir and allowed_paths: override cwd to stay within allowed paths
         let effectiveCwd = cwd ?? ctx.working_dir;
-        if (ctx.sandbox_dir) {
-          const resolvedCwd = path.isAbsolute(effectiveCwd) ? effectiveCwd : path.resolve(ctx.sandbox_dir, effectiveCwd);
-          if (!isWithinDir(resolvedCwd, ctx.sandbox_dir)) {
+        const allowedPaths = ctx.allowed_paths ?? [];
+        if (ctx.sandbox_dir || allowedPaths.length > 0) {
+          const resolvedCwd = path.isAbsolute(effectiveCwd) ? effectiveCwd : path.resolve(ctx.working_dir, effectiveCwd);
+          if (!isPathAllowed(resolvedCwd, allowedPaths, ctx.sandbox_dir)) {
+            const sandboxMsg = ctx.sandbox_dir ? ` or sandbox '${ctx.sandbox_dir}'` : '';
             return JSON.stringify({
               success: false,
-              error: `Working directory '${resolvedCwd}' is outside the sandbox directory '${ctx.sandbox_dir}'. Operation denied.`,
+              error: `Working directory '${resolvedCwd}' is outside allowed paths${sandboxMsg}. Operation denied.`,
             });
           }
           effectiveCwd = resolvedCwd;

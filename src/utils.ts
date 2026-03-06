@@ -24,6 +24,28 @@ export function isWithinDir(filePath: string, dir: string): boolean {
 }
 
 /**
+ * Returns true if filePath is allowed: either within sandbox_dir
+ * or within any of the allowed_paths.
+ * Empty allowed_paths = no additional paths allowed (only sandbox_dir if set).
+ */
+export function isPathAllowed(filePath: string, allowedPaths: string[], sandboxDir?: string): boolean {
+  // If sandbox_dir is set, check it first
+  if (sandboxDir && isWithinDir(filePath, sandboxDir)) {
+    return true;
+  }
+
+  // Check additional allowed paths
+  for (const allowedPath of allowedPaths) {
+    if (isWithinDir(filePath, allowedPath)) {
+      return true;
+    }
+  }
+
+  // No restrictions if both sandbox_dir and allowed_paths are empty
+  return !sandboxDir && allowedPaths.length === 0;
+}
+
+/**
  * Extracts the binary base name from a command string.
  * Handles full paths (/usr/bin/node, C:\bin\node.exe) and plain names.
  */
