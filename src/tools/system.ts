@@ -136,6 +136,29 @@ export function createSystemTools(ctx: ToolContext): StructuredTool[] {
         schema: z.object({ file_path: z.string() }),
       }
     ),
+
+    tool(
+      async () => {
+        return JSON.stringify({
+          working_dir: ctx.working_dir,
+          sandbox_dir: ctx.sandbox_dir ?? null,
+          allowed_paths: ctx.allowed_paths ?? [],
+          allowed_commands: ctx.allowed_commands,
+          readonly_mode: ctx.readonly_mode ?? false,
+          enabled_features: {
+            filesystem: ctx.enable_filesystem ?? true,
+            shell: ctx.enable_shell ?? true,
+            git: ctx.enable_git ?? true,
+            network: ctx.enable_network ?? true,
+          },
+        });
+      },
+      {
+        name: 'get_context',
+        description: 'Get the current DevKit context: working directory, sandbox, allowed paths, allowed commands, and enabled features. Use this to understand what paths and commands are available.',
+        schema: z.object({}),
+      }
+    ),
   ];
 }
 
